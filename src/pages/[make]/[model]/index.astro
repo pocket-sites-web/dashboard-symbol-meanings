@@ -1,0 +1,66 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import { getMakes, yearSpan, type Model, type Make, type Light } from '../../../lib/data';
+import { COLOURS, SEVERITY, type Colour } from '../../../lib/symbols';
+import { amazonUrl, SITE_URL, KEYFOB_URL } from '../../../lib/site';
+
+export function getStaticPaths() {
+  return getMakes().flatMap((mk) => mk.models.map((m) => ({ params: { make: mk.makeSlug, model: m.modelSlug }, props: { mk, m } })));
+}
+const { mk, m } = Astro.props as { mk: Make; m: Model };
+const span = yearSpan(m.from, m.to);
+const name = `${mk.make} ${m.model}`;
+const order: Colour[] = ['red', 'amber', 'green', 'blue', 'white'];
+const byColour = (ls: Light[]) => order.map((c) => ({ c, list: ls.filter((l) => l.col === c) })).filter((g) => g.list.length);
+const siblings = mk.models.filter((x) => x !== m);
+const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+  { '@type': 'ListItem', position: 2, name: mk.make, item: `${SITE_URL}/${mk.makeSlug}/` },
+  { '@type': 'ListItem', position: 3, name: m.model, item: `${SITE_URL}/${mk.makeSlug}/${m.modelSlug}/` },
+] };
+const total = m.gens[0].lights.length;
+---
+<Base title={`${name} Dashboard Symbols & Warning Lights (${span})`} description={`What every ${name} dashboard light means: ${total} warning lights and indicators from the ${name} owner's manual, by generation, with what to do for each.`} jsonLd={crumbs}>
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>›<a href={`/${mk.makeSlug}/`}>{mk.make}</a>›<span>{m.model}</span></nav>
+  <section>
+    <h1>{name} dashboard symbols and warning lights</h1>
+    <p class="lede">Every light in the {name} owner's manual, {span}. Tap a light to see what it means and what to do. Red means stop safely, amber means get it checked soon.</p>
+    {m.gens.length > 1 && <div class="years" style="margin-top:14px"><span class="label">Years</span>{m.gens.map((g) => <a href={`#${g.anchor}`}>{yearSpan(g.from, g.to)}</a>)}</div>}
+  </section>
+  {m.gens.map((g) => (
+    <section class="gen" id={g.anchor}>
+      <h2>{yearSpan(g.from, g.to)} {m.model} warning lights</h2>
+      <div class="grid">
+        {g.lights.map((l) => (
+          <details class="lt">
+            <summary><Icon id={l.sym?.id ?? null} colour={l.col} size={34} /><span>{l.name}</span></summary>
+            <div class="body">
+              <p class={`sev sev-${l.sym?.severity ?? (l.col === 'red' ? 'stop' : l.col === 'amber' ? 'soon' : 'info')}`}>{l.col === 'red' ? SEVERITY.stop : l.col === 'amber' ? SEVERITY.soon : SEVERITY.info}{!l.colourKnown && <span class="small muted"> · usual colour</span>}</p>
+              {l.meaning && <p><b>The manual says:</b> {l.meaning}</p>}
+              {l.action && <p><b>What to do:</b> {l.action}</p>}
+              {!l.action && l.sym && <p><b>What to do:</b> {l.sym.action}</p>}
+              {l.sym && <p class="small"><a href={`/lights/${l.sym.id}/`}>More about the {l.sym.name.toLowerCase()}</a>{l.sym.product && <> · <a href={amazonUrl(l.sym.product.q)} target="_blank" rel="nofollow sponsored noopener">Shop {l.sym.product.label}s (affiliate)</a></>}</p>}
+            </div>
+          </details>
+        ))}
+      </div>
+      <div class="tablewrap" style="margin-top:14px">
+        <table>
+          <thead><tr><th></th><th>Light</th><th>Colour</th><th>Meaning</th></tr></thead>
+          <tbody>
+            {byColour(g.lights).flatMap((gr) => gr.list.map((l) => (
+              <tr><td><Icon id={l.sym?.id ?? null} colour={l.col} size={22} glow={false} /></td><td>{l.sym ? <a href={`/lights/${l.sym.id}/`}>{l.name}</a> : l.name}</td><td class="nowrap"><span class="swatch" style={`background:${COLOURS[l.col].hex}`}></span>{COLOURS[l.col].name}{!l.colourKnown && '*'}</td><td>{l.meaning || l.sym?.meaning}</td></tr>
+            )))}
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">Source: {[...new Set(g.sources.map((s) => s.name))].slice(0, 3).join('; ')}{g.sources.length > 3 ? ' and others' : ''}. * Usual colour; the manual text doesn't state it.</p>
+    </section>
+  ))}
+  <section class="card">
+    <h2>More for the {m.model}</h2>
+    <p><a href={`${KEYFOB_URL}/`} rel="noopener">{name} key fob battery size</a> · <a href={`/${mk.makeSlug}/`}>All {mk.make} dashboard symbols</a></p>
+    {siblings.length > 0 && <ul class="link-grid" style="margin-top:10px">{siblings.slice(0, 12).map((x) => <li><a href={`/${mk.makeSlug}/${x.modelSlug}/`}>{mk.make} {x.model}<span class="sub">{yearSpan(x.from, x.to)}</span></a></li>)}</ul>}
+  </section>
+</Base>

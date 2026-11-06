@@ -1,0 +1,11 @@
+---
+// A dashboard symbol on a dark "instrument cluster" tile, lit in the light's colour.
+import { iconSvg, type Colour } from '../lib/symbols';
+interface Props { id: string | null; colour: Colour; size?: number; label?: string; glow?: boolean }
+const { id, colour, size = 44, label, glow = true } = Astro.props;
+---
+<span class:list={['tile', { glow }]} style={`--p:${size + 18}px`} data-c={colour}><Fragment set:html={iconSvg(id, colour, size, label)} /></span>
+<style is:global>
+.tile{display:inline-grid;place-items:center;width:var(--p);height:var(--p);border-radius:12px;background:radial-gradient(circle at 50% 40%,#1b232a,#0b0f12);box-shadow:inset 0 0 0 1px #26313a,inset 0 2px 6px rgba(0,0,0,.6);flex:none}
+.tile.glow .sym{filter:drop-shadow(0 0 5px currentColor) drop-shadow(0 0 1px currentColor)}
+</style>

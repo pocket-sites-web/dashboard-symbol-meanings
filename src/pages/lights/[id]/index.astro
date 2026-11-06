@@ -1,0 +1,80 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import { SYMBOLS, COLOURS, SEVERITY, usualColour, type Symbol, type Colour } from '../../../lib/symbols';
+import { getMakes, yearSpan } from '../../../lib/data';
+import { amazonUrl, SITE_URL } from '../../../lib/site';
+
+export function getStaticPaths() {
+  return SYMBOLS.map((s) => ({ params: { id: s.id }, props: { s } }));
+}
+const { s } = Astro.props as { s: Symbol };
+// Which models use this light, and how their manuals word it.
+const uses = getMakes().map((mk) => ({
+  mk,
+  models: mk.models.filter((m) => m.gens.some((g) => g.lights.some((l) => l.sym?.id === s.id))),
+})).filter((u) => u.models.length);
+const colours = new Set<Colour>([usualColour(s)]);
+const wordings: { who: string; href: string; name: string; meaning: string }[] = [];
+for (const { mk, models } of uses)
+  for (const m of models) {
+    const g = m.gens.find((g) => g.lights.some((l) => l.sym?.id === s.id))!;
+    const l = g.lights.find((l) => l.sym?.id === s.id)!;
+    if (l.colourKnown) colours.add(l.col);
+    if (wordings.length < 6 && l.meaning && !wordings.some((w) => w.who.startsWith(mk.make)))
+      wordings.push({ who: `${mk.make} ${m.model} (${yearSpan(g.from, g.to)})`, href: `/${mk.makeSlug}/${m.modelSlug}/#${g.anchor}`, name: l.name, meaning: l.meaning });
+  }
+const col = usualColour(s);
+const title = `${s.name}: What It Means and What to Do`;
+const description = `${s.meaning.split('. ')[0]}. ${SEVERITY[s.severity]}: what the ${s.name.toLowerCase()} means and what to do next.`;
+const faq = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: `What does the ${s.name.toLowerCase()} mean?`, acceptedAnswer: { '@type': 'Answer', text: s.meaning } },
+    { '@type': 'Question', name: `What should I do when the ${s.name.toLowerCase()} comes on?`, acceptedAnswer: { '@type': 'Answer', text: s.action } },
+  ],
+};
+const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+  { '@type': 'ListItem', position: 2, name: 'All symbols', item: `${SITE_URL}/lights/` },
+  { '@type': 'ListItem', position: 3, name: s.name, item: `${SITE_URL}/lights/${s.id}/` },
+] };
+---
+<Base title={title} description={description} jsonLd={[crumbs, faq]}>
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>›<a href="/lights/">All symbols</a>›<span>{s.name}</span></nav>
+  <section class="symhero">
+    <Icon id={s.id} colour={col} size={96} label={s.name} />
+    <div>
+      <h1>{s.name}</h1>
+      <p class={`sev sev-${s.severity}`}>{SEVERITY[s.severity]}</p>
+    </div>
+  </section>
+  <section class="card prose">
+    <h2>What it means</h2>
+    <p>{s.meaning}</p>
+    <h2>What to do</h2>
+    <p>{s.action}</p>
+    {s.product && <p><a class="buy" href={amazonUrl(s.product.q)} target="_blank" rel="nofollow sponsored noopener">Shop {s.product.label}s on Amazon <small>(affiliate)</small></a></p>}
+  </section>
+  {colours.size > 0 && (
+    <section>
+      <h2>Colours you may see</h2>
+      <ul class="colours">{[...colours].map((c) => <li><Icon id={s.id} colour={c} size={30} /><span><b>{COLOURS[c].name}</b> {COLOURS[c].means.toLowerCase()}</span></li>)}</ul>
+    </section>
+  )}
+  {wordings.length > 0 && (
+    <section>
+      <h2>How the manuals describe it</h2>
+      <div class="quotes">{wordings.map((w) => <blockquote class="card"><p>“{w.meaning}”</p><footer class="small muted"><a href={w.href}>{w.who}</a>, “{w.name}”</footer></blockquote>)}</div>
+    </section>
+  )}
+  {uses.length > 0 && (
+    <section>
+      <h2>Cars with this light</h2>
+      {uses.map(({ mk, models }) => (
+        <div class="usemake"><h3><a href={`/${mk.makeSlug}/#${s.id}`}>{mk.make}</a></h3>
+          <ul class="link-grid">{models.map((m) => <li><a href={`/${mk.makeSlug}/${m.modelSlug}/`}>{m.model}<span class="sub">{yearSpan(m.from, m.to)}</span></a></li>)}</ul></div>
+      ))}
+    </section>
+  )}
+</Base>

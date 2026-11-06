@@ -1,0 +1,18 @@
+[{"make":"Toyota","model":"Camry","year":2013,"source_name":"2013 Toyota Camry Owner's Manual","lights":[
+{"name":"Brake system warning light","symbol":null,"colour":"red","meaning":"Indicates that the parking brake is engaged, the brake fluid level is low, or the brake system is malfunctioning."},
+{"name":"Malfunction indicator lamp","symbol":null,"colour":null,"meaning":"Indicates a malfunction in the engine electronic control system."},
+{"name":"Low tire pressure warning light","symbol":null,"colour":null,"meaning":"Tire inflation pressure is too low."},
+{"name":"Master warning light","symbol":null,"colour":"red","meaning":"A buzzer sounds and the light comes on to indicate a message on the display."},
+{"name":"Slip indicator","symbol":null,"colour":null,"meaning":"Indicates VSC or TRAC is operating."},
+{"name":"VSC OFF indicator","symbol":null,"colour":null,"meaning":"VSC has been turned off."},
+{"name":"Cruise control indicator","symbol":null,"colour":"green","meaning":"Cruise control is on."},
+{"name":"Headlight high beam indicator","symbol":null,"colour":"blue","meaning":"High beams are on."}]},
+{"make":"Toyota","model":"Camry","year":2014,"source_name":"2014 Toyota Camry Owner's Manual","lights":[
+{"name":"Brake system warning light","symbol":null,"colour":"red","meaning":"Indicates that the parking brake is engaged, the brake fluid level is low, or the brake system is malfunctioning."},
+{"name":"Malfunction indicator lamp","symbol":null,"colour":null,"meaning":"Indicates a malfunction in the engine electronic control system."},
+{"name":"Low tire pressure warning light","symbol":null,"colour":null,"meaning":"Tire inflation pressure is too low."},
+{"name":"Master warning light","symbol":null,"colour":"red","meaning":"A buzzer sounds and the light comes on to indicate a message on the display."},
+{"name":"Slip indicator","symbol":null,"colour":null,"meaning":"Indicates VSC or TRAC is operating."},
+{"name":"VSC OFF indicator","symbol":null,"colour":null,"meaning":"VSC has been turned off."},
+{"name":"Cruise control indicator","symbol":null,"colour":"green","meaning":"Cruise control is on."},
+{"name":"Headlight high beam indicator","symbol":null,"colour":"blue","meaning":"High beams are on."}]}]

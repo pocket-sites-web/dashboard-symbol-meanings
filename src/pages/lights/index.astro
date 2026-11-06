@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { SYMBOLS, usualColour, SEVERITY } from '../../lib/symbols';
+const groups = (['stop', 'soon', 'info'] as const).map((sev) => ({ sev, list: SYMBOLS.filter((s) => s.severity === sev) }));
+---
+<Base title="Dashboard Symbols and Meanings: Every Warning Light Explained" description="Every common car dashboard symbol with what it means, what colour it shows and whether it is safe to keep driving.">
+  <section>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>›<span>All symbols</span></nav>
+    <h1>Dashboard symbols and meanings</h1>
+    <p class="lede">Find the shape on your dashboard. Red means stop safely, amber means get it checked soon, green and blue mean a system is on.</p>
+  </section>
+  {groups.map((g) => (
+    <section class="symgroup">
+      <h2>{SEVERITY[g.sev]}</h2>
+      <ul class="symgrid">{g.list.map((s) => <li><a href={`/lights/${s.id}/`}><Icon id={s.id} colour={usualColour(s)} size={40} /><span>{s.name}</span></a></li>)}</ul>
+    </section>
+  ))}
+</Base>

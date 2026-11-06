@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getMakes, makeLights, yearSpan, type Make } from '../../lib/data';
+import { COLOURS, type Colour } from '../../lib/symbols';
+import { SITE_URL } from '../../lib/site';
+
+export function getStaticPaths() {
+  return getMakes().map((mk) => ({ params: { make: mk.makeSlug }, props: { mk } }));
+}
+const { mk } = Astro.props as { mk: Make };
+const lights = makeLights(mk).filter((x) => x.l.sym || x.models.size > 1);
+const order: Colour[] = ['red', 'amber', 'green', 'blue', 'white'];
+const groups = order.map((c) => ({ c, list: lights.filter((x) => x.l.col === c).sort((a, b) => b.models.size - a.models.size) })).filter((g) => g.list.length);
+const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+  { '@type': 'ListItem', position: 2, name: mk.make, item: `${SITE_URL}/${mk.makeSlug}/` },
+] };
+---
+<Base title={`${mk.make} Dashboard Symbols and Meanings (All Warning Lights)`} description={`Every ${mk.make} dashboard warning light and symbol, grouped by colour, with what it means and what to do. From ${mk.make} owner's manuals.`} jsonLd={crumbs}>
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>›<span>{mk.make}</span></nav>
+  <section>
+    <h1>{mk.make} dashboard symbols and meanings</h1>
+    <p class="lede">The {lights.length} warning lights and indicators used across {mk.models.length} {mk.make} models, from the owner's manuals. Pick your model for its exact list, or find the shape below.</p>
+  </section>
+  <section>
+    <h2>Pick your model</h2>
+    <ul class="link-grid">{mk.models.map((m) => <li><a href={`/${mk.makeSlug}/${m.modelSlug}/`}>{m.model}<span class="sub">{yearSpan(m.from, m.to)}</span></a></li>)}</ul>
+  </section>
+  {groups.map((g) => (
+    <section>
+      <h2><span class="dot" style={`background:${COLOURS[g.c].hex}`}></span>{COLOURS[g.c].name} lights: {COLOURS[g.c].means.toLowerCase()}</h2>
+      <ul class="lights">
+        {g.list.map(({ l, models }) => (
+          <li id={l.sym?.id}>
+            <Icon id={l.sym?.id ?? null} colour={l.col} size={36} />
+            <div>
+              <h3>{l.sym ? <a href={`/lights/${l.sym.id}/`}>{l.sym.name}</a> : l.name}</h3>
+              <p>{l.sym ? l.sym.meaning.split('. ')[0] + '.' : l.meaning}</p>
+              <p class="small muted">On {models.size === mk.models.length ? `all ${mk.make} models we cover` : `${[...models].slice(0, 5).join(', ')}${models.size > 5 ? ` and ${models.size - 5} more` : ''}`}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Base>

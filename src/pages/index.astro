@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { getMakes } from '../lib/data';
+import { byId, usualColour } from '../lib/symbols';
+const makes = getMakes();
+const TOP = ['check-engine', 'master-warning', 'tpms', 'brake', 'battery', 'oil-pressure', 'coolant-temp', 'airbag', 'abs', 'stability', 'power-steering', 'key'];
+---
+<Base title="Dashboard Symbols and Meanings for Your Exact Car" description="What does that light on your dashboard mean? Find your car's warning lights from the owner's manual, or match the symbol, and see if it is safe to keep driving.">
+  <section>
+    <h1>What does that dashboard light mean?</h1>
+    <p class="lede">Tap the symbol you can see, or pick your car for the exact list from its owner's manual. Red means stop safely, amber means get it checked soon.</p>
+  </section>
+  <section>
+    <h2>Most common warning lights</h2>
+    <ul class="symgrid">{TOP.map((id) => { const s = byId.get(id)!; return <li><a href={`/lights/${id}/`}><Icon id={id} colour={usualColour(s)} size={40} /><span>{s.name}</span></a></li>; })}</ul>
+    <p><a href="/lights/">See all symbols</a></p>
+  </section>
+  <section>
+    <h2>Pick your make</h2>
+    <ul class="link-grid">{makes.map((m) => <li><a href={`/${m.makeSlug}/`}>{m.make}<span class="sub">{m.models.length} models</span></a></li>)}</ul>
+  </section>
+</Base>

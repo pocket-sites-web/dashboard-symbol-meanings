@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getMakes } from '../../lib/data';
+const makes = getMakes();
+---
+<Base title="Dashboard Symbols by Make" description="Choose your car make to see every dashboard warning light and symbol, with what it means and whether it is safe to drive.">
+  <section><h1>Dashboard symbols by make</h1></section>
+  <ul class="link-grid">{makes.map((m) => <li><a href={`/${m.makeSlug}/`}>{m.make}<span class="sub">{m.models.length} models</span></a></li>)}</ul>
+</Base>

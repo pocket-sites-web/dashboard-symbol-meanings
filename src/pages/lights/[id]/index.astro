@@ -54,7 +54,7 @@ const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', it
     <p>{s.meaning}</p>
     <h2>What to do</h2>
     <p>{s.action}</p>
-    {s.product && <p><a class="buy" href={amazonUrl(s.product.q)} target="_blank" rel="nofollow sponsored noopener">Shop {s.product.label}s on Amazon <small>(affiliate)</small></a></p>}
+    {s.product && <p><a class="buy" href={amazonUrl(s.product.q)} target="_blank" rel="nofollow sponsored noopener">Shop {s.product.label}s on Amazon</a></p>}
   </section>
   {colours.size > 0 && (
     <section>

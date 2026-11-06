@@ -40,7 +40,7 @@ const total = m.gens[0].lights.length;
               {l.meaning && <p><b>The manual says:</b> {l.meaning}</p>}
               {l.action && <p><b>What to do:</b> {l.action}</p>}
               {!l.action && l.sym && <p><b>What to do:</b> {l.sym.action}</p>}
-              {l.sym && <p class="small"><a href={`/lights/${l.sym.id}/`}>More about the {l.sym.name.toLowerCase()}</a>{l.sym.product && <> · <a href={amazonUrl(l.sym.product.q)} target="_blank" rel="nofollow sponsored noopener">Shop {l.sym.product.label}s (affiliate)</a></>}</p>}
+              {l.sym && <p class="small"><a href={`/lights/${l.sym.id}/`}>More about the {l.sym.name.toLowerCase()}</a>{l.sym.product && <> · <a href={amazonUrl(l.sym.product.q)} target="_blank" rel="nofollow sponsored noopener">Shop {l.sym.product.label}s on Amazon</a></>}</p>}
             </div>
           </details>
         ))}

@@ -36,7 +36,7 @@ const total = m.gens[0].lights.length;
           <details class="lt">
             <summary><Icon id={l.sym?.id ?? null} colour={l.col} size={34} /><span>{l.name}</span></summary>
             <div class="body">
-              <p class={`sev sev-${l.sym?.severity ?? (l.col === 'red' ? 'stop' : l.col === 'amber' ? 'soon' : 'info')}`}>{l.col === 'red' ? SEVERITY.stop : l.col === 'amber' ? SEVERITY.soon : SEVERITY.info}{!l.colourKnown && <span class="small muted"> · usual colour</span>}</p>
+              <p class={`sev sev-${l.col === 'red' ? 'stop' : l.col === 'amber' ? 'soon' : 'info'}`}>{l.col === 'red' ? SEVERITY.stop : l.col === 'amber' ? SEVERITY.soon : SEVERITY.info}{!l.colourKnown && <span class="small muted"> · usual colour</span>}</p>
               {l.meaning && <p><b>The manual says:</b> {l.meaning}</p>}
               {l.action && <p><b>What to do:</b> {l.action}</p>}
               {!l.action && l.sym && <p><b>What to do:</b> {l.sym.action}</p>}

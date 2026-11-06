@@ -15,7 +15,7 @@ export const slugify = (s: string) => s.toLowerCase().replace(/&/g, 'and').repla
 
 const enrich = (l: RawLight): Light => {
   const sym = (l.symbol && byId.get(l.symbol)) || matchSymbol(l.name);
-  return { ...l, sym, col: l.colour ?? usualColour(sym), colourKnown: !!l.colour, key: `${sym?.id ?? ''}|${l.name.toLowerCase()}` };
+  return { ...l, sym, col: l.colour ?? usualColour(sym), colourKnown: !!l.colour, key: `${sym?.id ?? ''}|${l.name.toLowerCase()}|${l.colour ?? ''}` };
 };
 
 // Lights change by generation, not by year: consecutive years with (nearly) the same light list
@@ -23,7 +23,7 @@ const enrich = (l: RawLight): Light => {
 const similar = (a: Set<string>, b: Set<string>) => {
   let n = 0;
   for (const k of a) if (b.has(k)) n++;
-  return n / Math.max(1, new Set([...a, ...b]).size) >= 0.75;
+  return n / Math.max(1, new Set([...a, ...b]).size) >= 0.6;
 };
 
 let cache: Make[] | null = null;
@@ -43,9 +43,10 @@ export function getMakes(): Make[] {
     const gens: Generation[] = [];
     let cur: { rs: RawYear[]; keys: Set<string> } | null = null;
     for (const r of rs) {
-      const keys = new Set(r.lights.map((l) => enrich(l).key));
+      // Compare by symbol where we know it, so small wording changes between editions don't split a generation.
+      const keys = new Set(r.lights.map((l) => { const e = enrich(l); return e.sym?.id ?? e.name.toLowerCase(); }));
       const last = cur?.rs[cur.rs.length - 1];
-      if (cur && last && r.year - last.year <= 1 && similar(cur.keys, keys)) {
+      if (cur && last && r.year - last.year <= 2 && similar(cur.keys, keys)) {
         cur.rs.push(r);
         for (const k of keys) cur.keys.add(k);
       } else {

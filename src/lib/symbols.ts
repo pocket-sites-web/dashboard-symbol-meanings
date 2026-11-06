@@ -35,7 +35,7 @@ const carSide = `<path d="M8 40v-8l7-2 6-9h18l9 9 8 2v8z" ${sw}/><circle cx="19"
 export const SYMBOLS: Symbol[] = [
   {
     id: 'check-engine', name: 'Check engine light', severity: 'soon',
-    match: /check engine|malfunction indicator|engine (warning|management|check)|\bmil\b|service engine soon|emission/,
+    match: /check engine|^((ev|hybrid) system )?malfunction indicator|engine (warning|management|check)|\bmil\b|service engine soon|emission/,
     meaning: 'The engine computer found a fault in the engine, fuel or emissions system. Steady means get it checked soon. Flashing means misfires that can damage the catalytic converter.',
     action: 'If it flashes, slow down and get the car checked straight away. If it is steady, check the fuel cap is tight, then have the code read. An OBD2 scanner reads it in a minute.',
     product: { label: 'OBD2 scanner', q: 'OBD2 scanner' },
@@ -59,7 +59,7 @@ export const SYMBOLS: Symbol[] = [
   },
   {
     id: 'battery', name: 'Battery / charging system light', severity: 'stop',
-    match: /charging|battery|alternator|12 ?v/,
+    match: /^(?!.*(cable|connect|plug|high voltage|key|fob|remote|discharge)).*(\bcharg(e|ing) (system )?(warning|light|indicator)|^charg(e|ing)|battery|alternator|12 ?v)/,
     meaning: 'The charging system is not keeping the battery charged. The car is running on battery power alone and will stop when it runs flat.',
     action: 'Turn off everything you can (A/C, heated seats, radio) and drive straight to a garage or home. Do not switch the engine off until you get there, as it may not restart.',
     product: { label: 'jump starter', q: 'portable car jump starter' },
@@ -75,7 +75,7 @@ export const SYMBOLS: Symbol[] = [
   },
   {
     id: 'brake', name: 'Brake system warning light', severity: 'stop',
-    match: /brake (system )?warning|brake fluid|parking brake.*(and|\/) brake|^brake$|brake system/,
+    match: /^(?!.*(\babs\b|anti-lock)).*(brake (system )?warning|brake fluid|parking brake.*(and|&|\/) brake|^brake$|brake system|\bebd\b|brake force distribution)/,
     meaning: 'Either the parking brake is on, the brake fluid is low, or the brake system has a fault.',
     action: 'Check the parking brake is fully released. If the light stays on, the brakes may not work properly: stop and get help rather than driving on.',
     svg: S(`${paren}${ring}${bang(32, 23, 9)}`),
@@ -110,7 +110,7 @@ export const SYMBOLS: Symbol[] = [
   },
   {
     id: 'airbag', name: 'Airbag (SRS) warning light', severity: 'soon',
-    match: /airbag|\bsrs\b|supplemental restraint/,
+    match: /air ?bag|\bsrs\b|supplemental restraint/,
     meaning: 'The airbag system has a fault, so the airbags may not go off in a crash.',
     action: 'The car drives normally, but get it checked soon. Do not try to repair airbag parts yourself.',
     svg: S(`<circle cx="27" cy="11" r="5" fill="currentColor"/><path d="M27 20v14l10 0 6 14M27 34l-6 14M18 26l9 4" ${sw}/><circle cx="46" cy="24" r="9" fill="currentColor"/>`),
@@ -216,7 +216,7 @@ export const SYMBOLS: Symbol[] = [
   },
   {
     id: 'front-fog', name: 'Front fog light indicator', severity: 'info',
-    match: /front fog|fog light(?!.*rear)|fog lamp(?!.*rear)/,
+    match: /^(?!.*rear).*(front fog|fog light|fog lamp)/,
     meaning: 'The front fog lights are on.',
     action: 'Turn them off when visibility is good, as they can dazzle other drivers.',
     svg: S(`<path d="M34 14c14 0 22 8 22 18s-8 18-22 18z" ${sw}/><path d="M6 22l20 4M6 32l20 4M6 42l20 4" ${sw}/><path d="M18 12c-4 6-4 34 0 40" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>`),
@@ -251,14 +251,14 @@ export const SYMBOLS: Symbol[] = [
   },
   {
     id: 'pre-collision', name: 'Pre-collision / forward collision light', severity: 'info',
-    match: /pre-?collision|\bpcs\b|forward collision|collision warning|emergency braking|\bfca\b|\bfcw\b/,
+    match: /pre-?collision|\bpcs\b|forward collision|collision warning|emergency braking|\bfca\b|\bfcw\b|forward safety|automatic braking|\brab\b|\bpksb\b|parking support brake|\baeb\b/,
     meaning: 'The collision warning or automatic emergency braking system is off or unavailable.',
     action: 'Clean the windshield and front grille sensor. If it stays on in clear weather, have it checked.',
     svg: S(`${carRear(22, 36, 0.8)}<path d="M38 16 46 8l2 10 10-2-6 8 8 6-10 2 2 10-8-6-6 8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/>`),
   },
   {
     id: 'blind-spot', name: 'Blind spot monitor light', severity: 'info',
-    match: /blind spot|\bbsm\b|\bbsd\b|\bbca\b|rear cross traffic/,
+    match: /blind spot|\bbsm\b|\bbsd\b|\bbca\b|rear cross traffic|\brcta\b|\brcd\b/,
     meaning: 'The blind spot monitor is off or not available.',
     action: 'Clean the rear bumper corners where the sensors sit. If it stays on, have it checked.',
     svg: S(`${carRear(22, 22, 0.8)}${carRear(44, 40, 0.8)}<path d="M8 56l8-8" ${sw}/>`),
@@ -337,7 +337,7 @@ export const SYMBOLS: Symbol[] = [
   },
   {
     id: 'low-outside-temp', name: 'Low outside temperature (ice) light', severity: 'info',
-    match: /outside temp|ice warning|icy|frost|snowflake|freez/,
+    match: /outside temp|\bice warning|\bicy\b|frost|snowflake|freez/,
     meaning: 'The outside temperature is near freezing, so roads may be icy.',
     action: 'Drive carefully, especially on bridges and in shade.',
     svg: S(`<path d="M32 6v52M10 19l44 26M10 45l44-26M26 10l6 6 6-6M26 54l6-6 6 6" ${sw}/>`),

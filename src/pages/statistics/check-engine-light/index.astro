@@ -1,0 +1,88 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/stats.css';
+import KeyStat from '../../../components/stats/KeyStat.astro';
+import Bars from '../../../components/stats/Bars.astro';
+import StateTable from '../../../components/stats/StateTable.astro';
+import Cite from '../../../components/stats/Cite.astro';
+import { cmpl as C, STATS_UPDATED_LABEL, articleLd, datasetLd, faqLd, n0, CMPL_URL, CMPL_CITE } from '../../../lib/stats';
+import { lightStats } from '../../../lib/lightstats';
+
+const L = lightStats();
+const celManual = L.symbolShare.find((s) => s.id === 'check-engine')!;
+const path = '/statistics/check-engine-light/';
+const title = 'Check Engine Light Statistics: NHTSA Complaints by Make, Model and Year';
+const [y0, y1] = C.years;
+const byMake = C.cel_by_make as { make: string; complaints: number; cel: number; pct: number }[];
+const top = byMake[0], low = byMake[byMake.length - 1];
+const tmy = C.top_cel_model_years as { model: string; n: number }[];
+const byYear = C.cel_by_year as Record<string, number>;
+const growth = Math.round((100 * (byYear[String(y1)] - byYear[String(y0)])) / byYear[String(y0)]);
+const celPct = ((100 * C.cel) / C.total).toFixed(1);
+const stallPct = Math.round((100 * C.cel_stall) / C.cel);
+const flashPct = ((100 * C.cel_flash) / C.cel).toFixed(1);
+const lights = C.lights as { light: string; n: number }[];
+const nextTimes = (C.cel / lights[1].n).toFixed(1);
+const description = `${n0(C.cel)} vehicle complaints to NHTSA from ${y0} to ${y1} mention the check engine light, ${growth}% more in ${y1} than in ${y0}. Which makes and models get the most, and how often it comes with a stall.`;
+const faq = [
+  ['How common are check engine light problems?', `From ${y0} to ${y1}, ${n0(C.cel)} of the ${n0(C.total)} vehicle complaints filed with NHTSA (${celPct}%) mentioned the check engine light, ${nextTimes} times as many as the next most-mentioned light.`],
+  ['Which car brand has the most check engine light complaints?', `Relative to its total complaints, ${top.make}: ${top.pct}% of its NHTSA complaints mention the check engine light. ${low.make} has the lowest share among the makes we compared (${low.pct}%).`],
+  ['Can you drive with the check engine light on?', 'If it is steady and the car drives normally, you can usually drive to a garage soon, after checking the fuel cap is tight. If it flashes, the engine is misfiring: slow down, avoid hard acceleration and get it checked straight away, because a misfire can damage the catalytic converter.'],
+  ['Does a check engine light mean the car might stall?', `Not usually, but ${stallPct}% of check engine light complaints to NHTSA also describe a stall, shutdown or loss of power. If the light comes with a change in how the car drives, get it checked before driving further.`],
+];
+const jsonLd = [...articleLd(path, title, description, 'Check engine light'),
+  datasetLd(path, 'NHTSA vehicle complaints mentioning the check engine light, by make', `Counts and shares of NHTSA owner complaints (received ${y0} to ${y1}) whose description mentions the check engine light or malfunction indicator lamp, by vehicle make.`, ['/data/check-engine-light-complaints-by-make.csv'], CMPL_URL, `${y0}/${y1}`), faqLd(faq)];
+const makeRows = byMake.map((x) => ({ label: x.make, cells: [{ text: `${x.pct.toFixed(1)}%` }, { text: n0(x.cel) }], tail: n0(x.complaints), muted: false }));
+const yearRows = Object.entries(byYear).map(([y, v]) => ({ label: y, value: v }));
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <section class="st-section">
+    <p class="crumbs"><a href="/">Home</a> › <a href="/statistics/">Statistics</a> › Check engine light</p>
+    <h1>Check engine light statistics</h1>
+    <p class="updated">Updated {STATS_UPDATED_LABEL} · Original analysis of {n0(C.total)} vehicle owner complaints filed with NHTSA, {y0} to {y1}</p>
+    <p class="lede">The check engine light is the dashboard warning drivers report most. We searched every vehicle complaint the National Highway Traffic Safety Administration received from {y0} to {y1} to count check engine light reports by make, model and year, and to see how often the light came with a stall or a flashing warning.</p>
+    <nav class="toc" aria-label="On this page"><a href="#key-findings">Key findings</a><a href="#by-year">By year</a><a href="#by-make">By make</a><a href="#by-model">By model</a><a href="#methodology">Methodology</a><a href="#cite">Cite</a></nav>
+  </section>
+
+  <section class="st-section" id="key-findings">
+    <h2>Key findings</h2>
+    <ul class="kstats">
+      <KeyStat id="total" value={n0(C.cel)} source={`NHTSA complaints, ${y0} to ${y1}`}>vehicle complaints mention the <b>check engine light</b>, {celPct}% of all complaints and {nextTimes} times as many as any other warning light.</KeyStat>
+      <KeyStat id="growth" value={`+${growth}%`} source="NHTSA complaints">more check engine light complaints in {y1} (<b>{n0(byYear[String(y1)])}</b>) than in {y0} ({n0(byYear[String(y0)])}).</KeyStat>
+      <KeyStat id="stall" value={`${stallPct}%`} source="NHTSA complaints">of check engine light complaints also describe a <b>stall, shutdown or loss of power</b> ({n0(C.cel_stall)} complaints).</KeyStat>
+      <KeyStat id="flashing" value={n0(C.cel_flash)} source="NHTSA complaints">complaints describe a <b>flashing or blinking</b> check engine light ({flashPct}%), the sign of an active misfire.</KeyStat>
+      <KeyStat id="top-make" value={`${top.pct}%`} source="NHTSA complaints">of <b>{top.make}</b> complaints mention the check engine light, the highest share of any make we compared; {low.make} has the lowest ({low.pct}%).</KeyStat>
+      <KeyStat id="top-model-year" value={n0(tmy[0].n)} source="NHTSA complaints">check engine light complaints about the <b>{tmy[0].model}</b>, more than any other model year.</KeyStat>
+    </ul>
+  </section>
+
+  <section class="st-section" id="by-year">
+    <h2>Check engine light complaints by year</h2>
+    <Bars id="check-engine-complaints-by-year" caption="NHTSA complaints mentioning the check engine light, by year received" rows={yearRows} format="count" valueLabel="Complaints" />
+  </section>
+
+  <section class="st-section" id="by-make">
+    <h2>Check engine light complaints by make</h2>
+    <p>Each make's check engine light complaints as a share of all its NHTSA complaints. Makes with at least 3,000 complaints are shown.</p>
+    <StateTable id="check-engine-complaints-by-make" caption={`Share of each make's NHTSA complaints mentioning the check engine light, ${y0} to ${y1}`} headers={['Make', 'Share', 'Check engine complaints']} rows={makeRows} tailHeader="All complaints" csv="/data/check-engine-light-complaints-by-make.csv" />
+  </section>
+
+  <section class="st-section" id="by-model">
+    <h2>Models with the most check engine light complaints</h2>
+    <Bars id="check-engine-complaints-by-model-year" caption="Model years with the most check engine light complaints" rows={tmy.map((x) => ({ label: x.model, value: x.n }))} format="count" valueLabel="Complaints" />
+    <p>Nearly every car has the light: it appears in {Math.round(celManual.pct)}% of the owner's manuals we have transcribed. <a href="/lights/check-engine/">What the check engine light means and what to do</a>.</p>
+  </section>
+
+  <section class="st-section st-faq" id="faq"><h2>Questions</h2>{faq.map(([q, a]) => (<div><h3>{q}</h3><p>{a}</p></div>))}</section>
+
+  <section class="st-section methods" id="methodology">
+    <h2>Methodology</h2>
+    <p>We downloaded NHTSA's complaint flat files and kept vehicle complaints received from {y0} to {y1}, counting each complaint once ({n0(C.total)} complaints). A complaint counts as a check engine light complaint if its description mentions the check engine light, engine light, service engine soon light or malfunction indicator lamp. Stalls and flashing lights are found by searching the same text, so treat them as indicators, not exact counts.</p>
+    <p>NHTSA complaints are reports from the public. They aren't verified, they depend on how many owners choose to file, and a high count doesn't by itself prove a defect.</p>
+    <h3>Sources</h3>
+    <ul class="st-small"><li><a href={CMPL_URL}>{CMPL_CITE}</a>.</li></ul>
+  </section>
+
+  <Cite title="Check Engine Light Statistics" path={path} />
+  <section class="st-section"><h2>More statistics</h2><ul class="st-links"><li><a href="/statistics/warning-light-complaints/">All warning light complaints</a></li><li><a href="/statistics/dashboard-lights/">How many warning lights a car has</a></li><li><a href="/statistics/">All statistics</a></li></ul></section>
+</Base>

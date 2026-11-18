@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/stats.css';
+import { cmpl, STATS_UPDATED_LABEL, SITE_URL, SITE_NAME, n0 } from '../../lib/stats';
+import { lightStats } from '../../lib/lightstats';
+const L = lightStats();
+const pages = [
+  { href: '/statistics/warning-light-complaints/', title: 'Warning light complaints', blurb: `${cmpl.warning_pct}% of NHTSA vehicle complaints mention a dashboard warning light. By light, make and model.` },
+  { href: '/statistics/check-engine-light/', title: 'Check engine light statistics', blurb: `${n0(cmpl.cel)} NHTSA complaints mention the check engine light. Which makes and models get the most.` },
+  { href: '/statistics/dashboard-lights/', title: 'How many warning lights a car has', blurb: `The median owner's manual lists ${L.median} lights. Counts and driver-assistance trends from ${n0(L.modelYears)} manuals.` },
+];
+---
+<Base title="Dashboard Warning Light Statistics" description="Original statistics on dashboard warning lights: NHTSA complaint analysis and our own data from hundreds of owner's manuals." jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${SITE_NAME} statistics`, url: `${SITE_URL}/statistics/` }}>
+  <section class="st-section">
+    <p class="crumbs"><a href="/">Home</a> › Statistics</p>
+    <h1>Dashboard warning light statistics</h1>
+    <p class="updated">Updated {STATS_UPDATED_LABEL}</p>
+    <p class="lede">Original research from {SITE_NAME}: our own owner's-manual light data plus new analysis of federal vehicle complaint and recall records. Every figure has its own link, sources and methodology, and you're welcome to cite them with a link back.</p>
+  </section>
+  <section class="st-section"><ul class="kstats">{pages.map((p) => (<li class="kstat"><h2><a href={p.href}>{p.title}</a></h2><p class="kstat-text">{p.blurb}</p></li>))}</ul></section>
+  <section class="st-section">
+    <h2>Downloads</h2>
+    <ul class="st-links" style="grid-template-columns:1fr">
+      <li><a href="/data/warning-light-complaints-by-make.csv" download>Warning light complaints by make (CSV)</a></li>
+      <li><a href="/data/check-engine-light-complaints-by-make.csv" download>Check engine light complaints by make (CSV)</a></li>
+      <li><a href="/data/warning-light-recalls-by-year.csv" download>Warning light recalls by year (CSV)</a></li>
+      <li><a href="/data/warning-lights-by-model-year.csv" download>Dashboard lights by model year (CSV)</a></li>
+    </ul>
+    <p class="st-small st-muted">Free to reuse under CC BY 4.0: please credit {SITE_NAME} with a link.</p>
+  </section>
+</Base>

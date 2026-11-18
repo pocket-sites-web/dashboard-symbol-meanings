@@ -1,0 +1,208 @@
+{
+ "years": [
+  2010,
+  2025
+ ],
+ "campaigns": 13045,
+ "lamp": 378,
+ "lamp_pct": 2.9,
+ "lamp_vehicles": 21475974,
+ "lamp_fail": 140,
+ "lamp_fail_vehicles": 5685267,
+ "fmvss101": 92,
+ "fmvss101_vehicles": 1645425,
+ "cluster": 207,
+ "cluster_vehicles": 9165876,
+ "lamp_2010_2014": 90,
+ "lamp_2021_2025": 160,
+ "by_year": {
+  "2010": {
+   "campaigns": 647,
+   "lamp": 17,
+   "lamp_vehicles": 2583421
+  },
+  "2011": {
+   "campaigns": 597,
+   "lamp": 22,
+   "lamp_vehicles": 4044282
+  },
+  "2012": {
+   "campaigns": 583,
+   "lamp": 16,
+   "lamp_vehicles": 705008
+  },
+  "2013": {
+   "campaigns": 627,
+   "lamp": 11,
+   "lamp_vehicles": 398430
+  },
+  "2014": {
+   "campaigns": 770,
+   "lamp": 24,
+   "lamp_vehicles": 1966998
+  },
+  "2015": {
+   "campaigns": 863,
+   "lamp": 15,
+   "lamp_vehicles": 501718
+  },
+  "2016": {
+   "campaigns": 919,
+   "lamp": 12,
+   "lamp_vehicles": 68446
+  },
+  "2017": {
+   "campaigns": 810,
+   "lamp": 20,
+   "lamp_vehicles": 332694
+  },
+  "2018": {
+   "campaigns": 912,
+   "lamp": 24,
+   "lamp_vehicles": 484333
+  },
+  "2019": {
+   "campaigns": 879,
+   "lamp": 34,
+   "lamp_vehicles": 855136
+  },
+  "2020": {
+   "campaigns": 782,
+   "lamp": 23,
+   "lamp_vehicles": 1115828
+  },
+  "2021": {
+   "campaigns": 988,
+   "lamp": 17,
+   "lamp_vehicles": 326977
+  },
+  "2022": {
+   "campaigns": 933,
+   "lamp": 25,
+   "lamp_vehicles": 1515439
+  },
+  "2023": {
+   "campaigns": 894,
+   "lamp": 43,
+   "lamp_vehicles": 957417
+  },
+  "2024": {
+   "campaigns": 950,
+   "lamp": 32,
+   "lamp_vehicles": 3814236
+  },
+  "2025": {
+   "campaigns": 891,
+   "lamp": 43,
+   "lamp_vehicles": 1805611
+  }
+ },
+ "lights": [
+  {
+   "light": "Check engine light",
+   "n": 31
+  },
+  {
+   "light": "Tire pressure (TPMS) light",
+   "n": 27
+  },
+  {
+   "light": "ABS light",
+   "n": 21
+  },
+  {
+   "light": "Airbag light",
+   "n": 15
+  },
+  {
+   "light": "Brake warning light",
+   "n": 11
+  },
+  {
+   "light": "Traction or stability control light",
+   "n": 6
+  },
+  {
+   "light": "Battery or charging light",
+   "n": 0
+  },
+  {
+   "light": "Power steering light",
+   "n": 0
+  },
+  {
+   "light": "Oil pressure or oil light",
+   "n": 0
+  },
+  {
+   "light": "Transmission light",
+   "n": 0
+  },
+  {
+   "light": "Engine temperature light",
+   "n": 0
+  }
+ ],
+ "by_mfr": [
+  {
+   "mfr": "Ford Motor Company",
+   "campaigns": 34,
+   "vehicles": 1477608
+  },
+  {
+   "mfr": "Chrysler (FCA US LLC)",
+   "campaigns": 24,
+   "vehicles": 904489
+  },
+  {
+   "mfr": "General Motors LLC",
+   "campaigns": 21,
+   "vehicles": 1985100
+  },
+  {
+   "mfr": "Jaguar Land Rover North America LLC",
+   "campaigns": 19,
+   "vehicles": 165335
+  },
+  {
+   "mfr": "Daimler Trucks North America LLC",
+   "campaigns": 15,
+   "vehicles": 85150
+  },
+  {
+   "mfr": "Volkswagen Group of America, Inc",
+   "campaigns": 15,
+   "vehicles": 323984
+  },
+  {
+   "mfr": "Toyota Motor Engineering & Manufacturing",
+   "campaigns": 15,
+   "vehicles": 3023606
+  },
+  {
+   "mfr": "BMW of North America LLC",
+   "campaigns": 13,
+   "vehicles": 35102
+  },
+  {
+   "mfr": "Mercedes-Benz USA LLC",
+   "campaigns": 11,
+   "vehicles": 68128
+  },
+  {
+   "mfr": "PACCAR Incorporated",
+   "campaigns": 11,
+   "vehicles": 716499
+  },
+  {
+   "mfr": "Hyundai Motor America",
+   "campaigns": 9,
+   "vehicles": 446469
+  },
+  {
+   "mfr": "Blue Bird Body Company",
+   "campaigns": 8,
+   "vehicles": 18605
+  }
+ ]
+}

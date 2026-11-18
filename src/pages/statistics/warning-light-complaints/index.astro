@@ -1,0 +1,97 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/stats.css';
+import KeyStat from '../../../components/stats/KeyStat.astro';
+import Bars from '../../../components/stats/Bars.astro';
+import StateTable from '../../../components/stats/StateTable.astro';
+import Cite from '../../../components/stats/Cite.astro';
+import { cmpl as C, rcl as R, STATS_UPDATED_LABEL, articleLd, datasetLd, faqLd, n0, CMPL_URL, CMPL_CITE } from '../../../lib/stats';
+
+const RCL_URL = 'https://www.nhtsa.gov/nhtsa-datasets-and-apis';
+const path = '/statistics/warning-light-complaints/';
+const title = 'Dashboard Warning Light Complaints: NHTSA Data by Light, Make and Model';
+const [y0, y1] = C.years;
+const lights = C.lights as { light: string; n: number }[];
+const byMake = C.by_make as { make: string; complaints: number; warning: number; pct: number }[];
+const top = byMake[0], low = byMake[byMake.length - 1];
+const tmy = C.top_model_years as { model: string; n: number }[];
+const byYear = C.by_year as Record<string, { total: number; warning: number }>;
+const yp = (y: string) => (100 * byYear[y].warning) / byYear[y].total;
+const m = (v: number) => `${(v / 1e6).toFixed(1)} million`;
+const description = `${n0(C.warning)} vehicle complaints to NHTSA from ${y0} to ${y1} (${C.warning_pct}%) mention a dashboard warning light. Which lights come up most, which makes and models get the most, and how often a warning light comes with a stall.`;
+const faq = [
+  ['How many car complaints involve a warning light?', `From ${y0} to ${y1}, ${n0(C.warning)} of the ${n0(C.total)} vehicle complaints filed with NHTSA (${C.warning_pct}%) mentioned a dashboard warning light or warning message.`],
+  ['Which warning light do drivers complain about most?', `The check engine light, mentioned in ${n0(lights[0].n)} complaints, followed by the ${lights[1].light.toLowerCase()} (${n0(lights[1].n)}) and the ${lights[2].light.toLowerCase()} (${n0(lights[2].n)}).`],
+  ['Which car brand has the most warning light complaints?', `Relative to its total complaints, ${top.make}: ${top.pct}% of its NHTSA complaints mention a warning light. ${low.make} has the lowest share among the makes we compared (${low.pct}%).`],
+  ['Is it safe to drive with a warning light on?', 'It depends on the colour and the light. Red lights (brakes, oil pressure, engine temperature, charging) mean stop safely as soon as you can. Amber lights mean get the car checked soon. A flashing check engine light means stop driving hard and get it checked straight away.'],
+];
+const jsonLd = [...articleLd(path, title, description, 'Warning light complaints'),
+  datasetLd(path, 'NHTSA vehicle complaints mentioning dashboard warning lights, by make', `Counts and shares of NHTSA owner complaints (received ${y0} to ${y1}) whose description mentions a dashboard warning light, by vehicle make.`, ['/data/warning-light-complaints-by-make.csv', '/data/warning-light-recalls-by-year.csv'], CMPL_URL, `${y0}/${y1}`), faqLd(faq)];
+const makeRows = byMake.map((x) => ({ label: x.make, cells: [{ text: `${x.pct.toFixed(1)}%` }, { text: n0(x.warning) }], tail: n0(x.complaints), muted: false }));
+const yearRows = Object.keys(byYear).map((y) => ({ label: y, value: yp(y), extra: n0(byYear[y].warning) }));
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <section class="st-section">
+    <p class="crumbs"><a href="/">Home</a> › <a href="/statistics/">Statistics</a> › Warning light complaints</p>
+    <h1>Dashboard warning light complaints: what NHTSA's data shows</h1>
+    <p class="updated">Updated {STATS_UPDATED_LABEL} · Original analysis of {n0(C.total)} vehicle owner complaints filed with NHTSA, {y0} to {y1}</p>
+    <p class="lede">When a warning light comes on, some drivers report it to the National Highway Traffic Safety Administration. We searched every vehicle complaint received from {y0} to {y1} for warning lights to see which lights come up most, which makes and models draw the most reports, and how often a light comes with a stall or loss of power.</p>
+    <nav class="toc" aria-label="On this page"><a href="#key-findings">Key findings</a><a href="#by-light">By light</a><a href="#by-make">By make</a><a href="#by-model">By model</a><a href="#by-year">By year</a><a href="#recalls">Recalls</a><a href="#methodology">Methodology</a><a href="#cite">Cite</a></nav>
+  </section>
+
+  <section class="st-section" id="key-findings">
+    <h2>Key findings</h2>
+    <ul class="kstats">
+      <KeyStat id="share" value={`${C.warning_pct}%`} source={`NHTSA complaints, ${y0} to ${y1}`}>of vehicle complaints to NHTSA mention a <b>dashboard warning light</b>: {n0(C.warning)} of {n0(C.total)}.</KeyStat>
+      <KeyStat id="check-engine" value={n0(lights[0].n)} source="NHTSA complaints">complaints mention the <b>check engine light</b>, by far the most reported light, ahead of the {lights[1].light.toLowerCase()} ({n0(lights[1].n)}).</KeyStat>
+      <KeyStat id="stall" value={`${C.warning_stall_pct}%`} source="NHTSA complaints">of warning light complaints also describe a <b>stall, shutdown or loss of power</b> ({n0(C.warning_stall)} complaints).</KeyStat>
+      <KeyStat id="no-warning" value={n0(C.no_warning)} source="NHTSA complaints">complaints say a problem happened with <b>no warning light</b> at all.</KeyStat>
+      <KeyStat id="rising" value={`${yp(String(y1)).toFixed(1)}%`} source="NHTSA complaints">of complaints received in {y1} mention a warning light, up from <b>{yp(String(y0)).toFixed(1)}%</b> in {y0}.</KeyStat>
+      <KeyStat id="top-make" value={`${top.pct}%`} source="NHTSA complaints">of <b>{top.make}</b> complaints mention a warning light, the highest share of any make we compared; {low.make} has the lowest ({low.pct}%).</KeyStat>
+    </ul>
+  </section>
+
+  <section class="st-section" id="by-light">
+    <h2>Which warning lights drivers report</h2>
+    <p>Complaints that name each light. A complaint can name more than one, and some only say "warning light" without naming it, so the rows add up to less than the total.</p>
+    <Bars id="complaints-by-light" caption={`NHTSA complaints mentioning each warning light, ${y0} to ${y1}`} rows={lights.map((l) => ({ label: l.light, value: l.n }))} format="count" valueLabel="Complaints" />
+    <p class="st-small">What they mean: <a href="/lights/check-engine/">check engine light</a> · <a href="/lights/airbag/">airbag light</a> · <a href="/lights/stability/">traction control light</a> · <a href="/lights/abs/">ABS light</a> · <a href="/lights/power-steering/">power steering light</a> · <a href="/lights/">all lights</a></p>
+  </section>
+
+  <section class="st-section" id="by-make">
+    <h2>Warning light complaints by make</h2>
+    <p>Brands that sell more cars get more complaints of every kind, so we compare each make's warning light complaints with its total. Makes with at least 3,000 complaints are shown.</p>
+    <StateTable id="warning-light-complaints-by-make" caption={`Share of each make's NHTSA complaints mentioning a warning light, ${y0} to ${y1}`} headers={['Make', 'Share', 'Warning light complaints']} rows={makeRows} tailHeader="All complaints" csv="/data/warning-light-complaints-by-make.csv" />
+  </section>
+
+  <section class="st-section" id="by-model">
+    <h2>Models with the most warning light complaints</h2>
+    <p>Ford models stand out. Most light-related complaints about the 2017 Ford Escape and 2017 Ford Edge mention coolant, with many describing coolant loss and an engine warning as the first sign of trouble.</p>
+    <Bars id="warning-light-complaints-by-model-year" caption="Model years with the most warning light complaints" rows={tmy.map((x) => ({ label: x.model, value: x.n }))} format="count" valueLabel="Complaints" />
+  </section>
+
+  <section class="st-section" id="by-year">
+    <h2>Warning light complaints by year</h2>
+    <Bars id="warning-light-share-by-year" caption="Share of NHTSA complaints mentioning a warning light, by year received" rows={yearRows} valueLabel="Share of complaints" extraLabel="Complaints" />
+  </section>
+
+  <section class="st-section" id="recalls">
+    <h2>Recalls involving warning lights</h2>
+    <p>Warning lights also feature in safety recalls, usually because a light or the instrument cluster may fail to show a warning it should. From {R.years[0]} to {R.years[1]}, {n0(R.lamp)} vehicle recall campaigns ({R.lamp_pct}% of all) involved a warning light, telltale or the instrument cluster, covering {m(R.lamp_vehicles)} vehicles. In {n0(R.lamp_fail)} of them the light or display could fail to come on or go blank ({m(R.lamp_fail_vehicles)} vehicles), and {n0(R.fmvss101)} were filed under FMVSS 101, the federal standard for dashboard controls and displays.</p>
+    <p class="st-small"><a href="/data/warning-light-recalls-by-year.csv" download>Download warning light recalls by year (CSV)</a></p>
+  </section>
+
+  <section class="st-section st-faq" id="faq"><h2>Questions</h2>{faq.map(([q, a]) => (<div><h3>{q}</h3><p>{a}</p></div>))}</section>
+
+  <section class="st-section methods" id="methodology">
+    <h2>Methodology</h2>
+    <p>We downloaded NHTSA's complaint flat files and kept vehicle complaints received from {y0} to {y1}, counting each complaint once ({n0(C.total)} complaints). A complaint counts as a warning light complaint if its description mentions a warning light, lamp, message or indicator, a dashboard light coming on, or a named light such as the check engine or ABS light. Stalls and "no warning light" reports are found by searching the same text, so treat them as indicators, not exact counts.</p>
+    <p>Recalls come from NHTSA's recall flat file, counted once per campaign, with a campaign included if its defect or consequence text mentions a warning light, telltale, indicator lamp or instrument cluster.</p>
+    <p>NHTSA complaints are reports from the public. They aren't verified, they depend on how many owners choose to file, and a high count doesn't by itself prove a defect.</p>
+    <h3>Sources</h3>
+    <ul class="st-small"><li><a href={CMPL_URL}>{CMPL_CITE}</a>.</li><li><a href={RCL_URL}>National Highway Traffic Safety Administration, recalls flat file (FLAT_RCL_POST_2010)</a>.</li></ul>
+  </section>
+
+  <Cite title="Dashboard Warning Light Complaints" path={path} />
+  <section class="st-section"><h2>More statistics</h2><ul class="st-links"><li><a href="/statistics/check-engine-light/">Check engine light statistics</a></li><li><a href="/statistics/dashboard-lights/">How many warning lights a car has</a></li><li><a href="/statistics/">All statistics</a></li></ul></section>
+</Base>

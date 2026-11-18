@@ -1,0 +1,90 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/stats.css';
+import KeyStat from '../../../components/stats/KeyStat.astro';
+import Bars from '../../../components/stats/Bars.astro';
+import Cite from '../../../components/stats/Cite.astro';
+import { STATS_UPDATED_LABEL, SITE_NAME, SITE_URL, articleLd, datasetLd, faqLd, n0 } from '../../../lib/stats';
+import { lightStats } from '../../../lib/lightstats';
+
+const S = lightStats();
+const path = '/statistics/dashboard-lights/';
+const title = `How Many Warning Lights Does a Car Have? Dashboard Light Statistics From ${S.modelYears} Owner's Manuals`;
+const makes = S.makes.join(', ').replace(/, ([^,]*)$/, ' and $1');
+const p0 = S.byPeriod[0], p1 = S.byPeriod[S.byPeriod.length - 1];
+const growth = Math.round((100 * (p1.median - p0.median)) / p0.median);
+const ad = Object.fromEntries(S.adoption.map((a) => [a.id, a]));
+const pct = (v: number) => `${Math.round(v)}%`;
+const sym = Object.fromEntries(S.symbolShare.map((s) => [s.id, s]));
+const lanePeak = ad['lane'];
+const description = `The median car owner's manual lists ${S.median} dashboard warning and indicator lights, up from ${p0.median} for 2010 to 2014 models to ${p1.median} for 2025 to 2026. Original statistics from ${S.modelYears} ${makes} manuals.`;
+const faq = [
+  ['How many warning lights are on a car dashboard?', `In the ${n0(S.modelYears)} owner's manuals we have transcribed, the median lists ${S.median} warning and indicator lights. The fewest is ${S.min.lights} (${S.min.year} ${S.min.make} ${S.min.model}) and the most is ${S.max.lights} (${S.max.year} ${S.max.make} ${S.max.model}).`],
+  ['Do newer cars have more warning lights?', `Yes. Owner's manuals for 2025 to 2026 models list a median of ${p1.median} lights, against ${p0.median} for 2010 to 2014 models, a rise of ${growth}%. Lane assist, pre-collision and brake hold lights are among the additions.`],
+  ['Which warning lights do almost all cars have?', `The brake warning light (${pct(sym['brake'].pct)} of manuals), airbag light (${pct(sym['airbag'].pct)}), battery or charging light (${pct(sym['battery'].pct)}), check engine light (${pct(sym['check-engine'].pct)}) and ABS light (${pct(sym['abs'].pct)}).`],
+  ['When did lane departure warning lights become common?', `Lane assist lights appear in ${pct(lanePeak.early)} of 2010 to 2014 manuals in our data and ${pct(lanePeak.late)} of 2025 to 2026 manuals. They passed half of new manuals around ${lanePeak.byYear.find((y) => y.pct >= 50)?.year}.`],
+];
+const jsonLd = [...articleLd(path, title, description, 'Dashboard lights'),
+  datasetLd(path, 'Dashboard warning lights listed in car owner\'s manuals, by model year', `Number of warning and indicator lights listed in ${S.modelYears} ${makes} owner's manuals (${S.years[0]} to ${S.years[S.years.length - 1]}), with driver-assistance light flags, transcribed by ${SITE_NAME}.`, ['/data/warning-lights-by-model-year.csv'], `${SITE_URL}/sources/`, `${S.years[0]}/${S.years[S.years.length - 1]}`), faqLd(faq)];
+const periodRows = S.byPeriod.map((p) => ({ label: p.label, value: p.median, extra: n0(p.n) }));
+const makeRows = S.byMake.map((p) => ({ label: p.label, value: p.median, extra: n0(p.n) }));
+const common = S.symbolShare.slice(0, 15).map((s) => ({ label: s.name, value: s.pct }));
+const yr = (id: string) => ad[id].byYear.map((y) => ({ label: String(y.year), value: y.pct }));
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <section class="st-section">
+    <p class="crumbs"><a href="/">Home</a> › <a href="/statistics/">Statistics</a> › Dashboard lights</p>
+    <h1>How many warning lights does a car have?</h1>
+    <p class="updated">Updated {STATS_UPDATED_LABEL} · Original data: {n0(S.totalLights)} warning and indicator lights from {n0(S.modelYears)} owner's manuals</p>
+    <p class="lede">For every model on {SITE_NAME} we transcribe the warning and indicator light section of the official owner's manual. That gives us a dataset nobody else publishes: how many lights a dashboard has, which ones nearly every car shares and how quickly driver-assistance lights spread. It covers {S.models} {makes} models from {S.years[0]} to {S.years[S.years.length - 1]}.</p>
+    <nav class="toc" aria-label="On this page"><a href="#key-findings">Key findings</a><a href="#over-time">Over time</a><a href="#most-common">Most common lights</a><a href="#driver-assistance">Driver-assistance lights</a><a href="#methodology">Methodology</a><a href="#cite">Cite</a></nav>
+  </section>
+
+  <section class="st-section" id="key-findings">
+    <h2>Key findings</h2>
+    <ul class="kstats">
+      <KeyStat id="median-lights" value={String(S.median)} source={`${SITE_NAME} data`}>warning and indicator lights in the <b>median owner's manual</b> we have transcribed.</KeyStat>
+      <KeyStat id="more-lights" value={`+${growth}%`} source={`${SITE_NAME} data`}>more lights in 2025 to 2026 manuals (median <b>{p1.median}</b>) than in 2010 to 2014 manuals (median {p0.median}).</KeyStat>
+      <KeyStat id="most-lights" value={String(S.max.lights)} source={`${SITE_NAME} data`}>lights in the <b>{S.max.year} {S.max.make} {S.max.model}</b> manual, the most of any we cover. The fewest is the {S.min.year} {S.min.make} {S.min.model}, with {S.min.lights}.</KeyStat>
+      <KeyStat id="lane-assist" value={pct(ad['lane'].late)} source={`${SITE_NAME} data`}>of 2025 to 2026 manuals include a <b>lane assist light</b>, up from {pct(ad['lane'].early)} in 2010 to 2014.</KeyStat>
+      <KeyStat id="pre-collision" value={pct(ad['pre-collision'].late)} source={`${SITE_NAME} data`}>of 2025 to 2026 manuals include a <b>pre-collision (automatic braking) light</b>, up from {pct(ad['pre-collision'].early)} in 2010 to 2014.</KeyStat>
+      <KeyStat id="universal" value={pct(sym['brake'].pct)} source={`${SITE_NAME} data`}>of manuals include the red <b>brake warning light</b>, the most common light of all, just ahead of the airbag light ({pct(sym['airbag'].pct)}).</KeyStat>
+    </ul>
+  </section>
+
+  <section class="st-section" id="over-time">
+    <h2>Dashboard lights over time</h2>
+    <p>Median number of warning and indicator lights listed in each owner's manual.</p>
+    <Bars id="lights-by-period" caption="Median lights per owner's manual, by model year period" rows={periodRows} format="count" valueLabel="Median lights" extraLabel="Manuals" />
+    <Bars id="lights-by-make" caption="Median lights per owner's manual, by make" rows={makeRows} format="count" valueLabel="Median lights" extraLabel="Manuals" />
+  </section>
+
+  <section class="st-section" id="most-common">
+    <h2>The most common dashboard lights</h2>
+    <p>Share of owner's manuals that include each light. Click through for what each one means.</p>
+    <Bars id="most-common-lights" caption="Share of owner's manuals listing each light" rows={common} valueLabel="Share of manuals" />
+    <p class="st-small">Meanings: <a href="/lights/brake/">brake warning light</a> · <a href="/lights/airbag/">airbag light</a> · <a href="/lights/check-engine/">check engine light</a> · <a href="/lights/abs/">ABS light</a> · <a href="/lights/">all lights</a></p>
+  </section>
+
+  <section class="st-section" id="driver-assistance">
+    <h2>How driver-assistance lights spread</h2>
+    <p>Share of each model year's manuals that include the light. A manual lists every light for every trim, so these show when a system became available across a range, not how many cars were sold with it.</p>
+    <Bars id="lane-assist-by-year" caption="Lane departure / lane assist light: share of manuals by model year" rows={yr('lane')} valueLabel="Share of manuals" />
+    <Bars id="pre-collision-by-year" caption="Pre-collision / forward collision light: share of manuals by model year" rows={yr('pre-collision')} valueLabel="Share of manuals" />
+    <Bars id="brake-hold-by-year" caption="Brake hold / auto hold light: share of manuals by model year" rows={yr('brake-hold')} valueLabel="Share of manuals" />
+    <p class="st-small">Meanings: <a href="/lights/lane/">lane assist light</a> · <a href="/lights/pre-collision/">pre-collision light</a> · <a href="/lights/brake-hold/">brake hold light</a></p>
+  </section>
+
+  <section class="st-section st-faq" id="faq"><h2>Questions</h2>{faq.map(([q, a]) => (<div><h3>{q}</h3><p>{a}</p></div>))}</section>
+
+  <section class="st-section methods" id="methodology">
+    <h2>Methodology</h2>
+    <p>Each model year on {SITE_NAME} is transcribed from the warning and indicator light section of the official owner's manual. We count every light the manual lists, then match each one to our symbol library by its name. Lights we can't match still count in the totals but not in the per-light shares.</p>
+    <p>The data covers {makes} only, model years {S.years[0]} to {S.years[S.years.length - 1]}, and some makes and years are better represented than others. Manuals differ in how much they list (some put driver-assistance lights in a separate chapter), so treat small differences between makes with caution. We add manuals over time and these figures update with them.</p>
+    <h3>Sources</h3>
+    <ul class="st-small"><li>{SITE_NAME}, warning light data transcribed from manufacturers' owner's manuals. <a href="/sources/">Sources and method</a>.</li><li><a href="/data/warning-lights-by-model-year.csv" download>Download lights by model year (CSV)</a>.</li></ul>
+  </section>
+
+  <Cite title="Dashboard Warning Light Statistics" path={path} />
+  <section class="st-section"><h2>More statistics</h2><ul class="st-links"><li><a href="/statistics/warning-light-complaints/">Warning light complaints</a></li><li><a href="/statistics/check-engine-light/">Check engine light statistics</a></li><li><a href="/statistics/">All statistics</a></li></ul></section>
+</Base>

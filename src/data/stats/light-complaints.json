@@ -1,0 +1,555 @@
+{
+ "years": [
+  2015,
+  2025
+ ],
+ "total": 722712,
+ "warning": 144491,
+ "warning_pct": 20.0,
+ "warning_stall": 30316,
+ "warning_stall_pct": 21.0,
+ "multi": 3435,
+ "no_warning": 30416,
+ "cel": 48857,
+ "cel_flash": 4651,
+ "crash_pct_warning": 2.8,
+ "crash_pct_all": 4.4,
+ "lights": [
+  {
+   "light": "Check engine light",
+   "n": 48857
+  },
+  {
+   "light": "Airbag light",
+   "n": 17315
+  },
+  {
+   "light": "Traction or stability control light",
+   "n": 7539
+  },
+  {
+   "light": "ABS light",
+   "n": 6219
+  },
+  {
+   "light": "Power steering light",
+   "n": 5606
+  },
+  {
+   "light": "Oil pressure or oil light",
+   "n": 4965
+  },
+  {
+   "light": "Battery or charging light",
+   "n": 2709
+  },
+  {
+   "light": "Tire pressure (TPMS) light",
+   "n": 2006
+  },
+  {
+   "light": "Transmission light",
+   "n": 1664
+  },
+  {
+   "light": "Brake warning light",
+   "n": 1570
+  },
+  {
+   "light": "Engine temperature light",
+   "n": 1368
+  }
+ ],
+ "by_year": {
+  "2015": {
+   "total": 76156,
+   "warning": 11634
+  },
+  "2016": {
+   "total": 72105,
+   "warning": 10107
+  },
+  "2017": {
+   "total": 69082,
+   "warning": 9041
+  },
+  "2018": {
+   "total": 65344,
+   "warning": 10151
+  },
+  "2019": {
+   "total": 75075,
+   "warning": 13139
+  },
+  "2020": {
+   "total": 58465,
+   "warning": 9608
+  },
+  "2021": {
+   "total": 49044,
+   "warning": 10533
+  },
+  "2022": {
+   "total": 53221,
+   "warning": 14013
+  },
+  "2023": {
+   "total": 62775,
+   "warning": 17130
+  },
+  "2024": {
+   "total": 67445,
+   "warning": 18574
+  },
+  "2025": {
+   "total": 74000,
+   "warning": 20561
+  }
+ },
+ "top_model_years": [
+  {
+   "model": "2017 Ford Escape",
+   "n": 1188
+  },
+  {
+   "model": "2018 Ram 2500",
+   "n": 1171
+  },
+  {
+   "model": "2018 Ford Escape",
+   "n": 772
+  },
+  {
+   "model": "2013 Ford Escape",
+   "n": 706
+  },
+  {
+   "model": "2010 Ford Fusion",
+   "n": 698
+  },
+  {
+   "model": "2013 Ford F-150",
+   "n": 675
+  },
+  {
+   "model": "2017 Ford Edge",
+   "n": 659
+  },
+  {
+   "model": "2012 Ford Focus",
+   "n": 639
+  },
+  {
+   "model": "2011 Hyundai Sonata",
+   "n": 604
+  },
+  {
+   "model": "2014 Jeep Cherokee",
+   "n": 589
+  },
+  {
+   "model": "2015 Chrysler 200",
+   "n": 555
+  },
+  {
+   "model": "2014 Ford Focus",
+   "n": 549
+  }
+ ],
+ "top_cel_model_years": [
+  {
+   "model": "2017 Ford Escape",
+   "n": 945
+  },
+  {
+   "model": "2018 Ford Escape",
+   "n": 591
+  },
+  {
+   "model": "2017 Ford Edge",
+   "n": 551
+  },
+  {
+   "model": "2013 Ford Escape",
+   "n": 351
+  },
+  {
+   "model": "2018 Ford Edge",
+   "n": 339
+  },
+  {
+   "model": "2014 Ford Focus",
+   "n": 300
+  },
+  {
+   "model": "2012 Ford Focus",
+   "n": 295
+  },
+  {
+   "model": "2017 Ford Fusion",
+   "n": 290
+  },
+  {
+   "model": "2014 Jeep Cherokee",
+   "n": 275
+  },
+  {
+   "model": "2016 Ford Fusion",
+   "n": 264
+  }
+ ],
+ "by_make": [
+  {
+   "make": "Ram",
+   "complaints": 17493,
+   "warning": 5136,
+   "pct": 29.4
+  },
+  {
+   "make": "Kia",
+   "complaints": 30404,
+   "warning": 8721,
+   "pct": 28.7
+  },
+  {
+   "make": "Hyundai",
+   "complaints": 37673,
+   "warning": 10266,
+   "pct": 27.3
+  },
+  {
+   "make": "Infiniti",
+   "complaints": 3684,
+   "warning": 933,
+   "pct": 25.3
+  },
+  {
+   "make": "Saturn",
+   "complaints": 3004,
+   "warning": 712,
+   "pct": 23.7
+  },
+  {
+   "make": "Ford",
+   "complaints": 130686,
+   "warning": 29435,
+   "pct": 22.5
+  },
+  {
+   "make": "Volkswagen",
+   "complaints": 16985,
+   "warning": 3818,
+   "pct": 22.5
+  },
+  {
+   "make": "Chevrolet",
+   "complaints": 70072,
+   "warning": 15469,
+   "pct": 22.1
+  },
+  {
+   "make": "Buick",
+   "complaints": 6649,
+   "warning": 1396,
+   "pct": 21.0
+  },
+  {
+   "make": "Jeep",
+   "complaints": 46668,
+   "warning": 9630,
+   "pct": 20.6
+  },
+  {
+   "make": "Nissan",
+   "complaints": 35534,
+   "warning": 7175,
+   "pct": 20.2
+  },
+  {
+   "make": "Pontiac",
+   "complaints": 5533,
+   "warning": 1100,
+   "pct": 19.9
+  },
+  {
+   "make": "Acura",
+   "complaints": 7093,
+   "warning": 1349,
+   "pct": 19.0
+  },
+  {
+   "make": "Chrysler",
+   "complaints": 21099,
+   "warning": 3947,
+   "pct": 18.7
+  },
+  {
+   "make": "GMC",
+   "complaints": 22078,
+   "warning": 4067,
+   "pct": 18.4
+  },
+  {
+   "make": "BMW",
+   "complaints": 16482,
+   "warning": 2994,
+   "pct": 18.2
+  },
+  {
+   "make": "Cadillac",
+   "complaints": 7075,
+   "warning": 1255,
+   "pct": 17.7
+  },
+  {
+   "make": "Honda",
+   "complaints": 50723,
+   "warning": 8967,
+   "pct": 17.7
+  },
+  {
+   "make": "Mercedes-Benz",
+   "complaints": 15283,
+   "warning": 2624,
+   "pct": 17.2
+  },
+  {
+   "make": "Lincoln",
+   "complaints": 5560,
+   "warning": 949,
+   "pct": 17.1
+  },
+  {
+   "make": "Mercury",
+   "complaints": 4009,
+   "warning": 676,
+   "pct": 16.9
+  },
+  {
+   "make": "Audi",
+   "complaints": 6936,
+   "warning": 1165,
+   "pct": 16.8
+  },
+  {
+   "make": "Dodge",
+   "complaints": 36150,
+   "warning": 5536,
+   "pct": 15.3
+  },
+  {
+   "make": "Mazda",
+   "complaints": 9373,
+   "warning": 1427,
+   "pct": 15.2
+  },
+  {
+   "make": "Toyota",
+   "complaints": 47386,
+   "warning": 7116,
+   "pct": 15.0
+  },
+  {
+   "make": "Lexus",
+   "complaints": 6052,
+   "warning": 813,
+   "pct": 13.4
+  },
+  {
+   "make": "Subaru",
+   "complaints": 18673,
+   "warning": 2450,
+   "pct": 13.1
+  },
+  {
+   "make": "Tesla",
+   "complaints": 12151,
+   "warning": 832,
+   "pct": 6.8
+  }
+ ],
+ "cel_stall": 14839,
+ "cel_by_year": {
+  "2015": 3545,
+  "2016": 2974,
+  "2017": 2764,
+  "2018": 3199,
+  "2019": 4773,
+  "2020": 3663,
+  "2021": 3486,
+  "2022": 4381,
+  "2023": 5778,
+  "2024": 6941,
+  "2025": 7353
+ },
+ "cel_by_make": [
+  {
+   "make": "Kia",
+   "complaints": 30404,
+   "cel": 4082,
+   "pct": 13.4
+  },
+  {
+   "make": "Hyundai",
+   "complaints": 37673,
+   "cel": 4093,
+   "pct": 10.9
+  },
+  {
+   "make": "Chevrolet",
+   "complaints": 70072,
+   "cel": 6113,
+   "pct": 8.7
+  },
+  {
+   "make": "Ford",
+   "complaints": 130686,
+   "cel": 11160,
+   "pct": 8.5
+  },
+  {
+   "make": "Buick",
+   "complaints": 6649,
+   "cel": 546,
+   "pct": 8.2
+  },
+  {
+   "make": "Infiniti",
+   "complaints": 3684,
+   "cel": 298,
+   "pct": 8.1
+  },
+  {
+   "make": "Chrysler",
+   "complaints": 21099,
+   "cel": 1592,
+   "pct": 7.5
+  },
+  {
+   "make": "Jeep",
+   "complaints": 46668,
+   "cel": 3416,
+   "pct": 7.3
+  },
+  {
+   "make": "GMC",
+   "complaints": 22078,
+   "cel": 1603,
+   "pct": 7.3
+  },
+  {
+   "make": "Volkswagen",
+   "complaints": 16985,
+   "cel": 1199,
+   "pct": 7.1
+  },
+  {
+   "make": "Mercedes-Benz",
+   "complaints": 15283,
+   "cel": 1022,
+   "pct": 6.7
+  },
+  {
+   "make": "Ram",
+   "complaints": 17493,
+   "cel": 1085,
+   "pct": 6.2
+  },
+  {
+   "make": "Nissan",
+   "complaints": 35534,
+   "cel": 2161,
+   "pct": 6.1
+  },
+  {
+   "make": "Saturn",
+   "complaints": 3004,
+   "cel": 163,
+   "pct": 5.4
+  },
+  {
+   "make": "BMW",
+   "complaints": 16482,
+   "cel": 854,
+   "pct": 5.2
+  },
+  {
+   "make": "Cadillac",
+   "complaints": 7075,
+   "cel": 366,
+   "pct": 5.2
+  },
+  {
+   "make": "Dodge",
+   "complaints": 36150,
+   "cel": 1790,
+   "pct": 5.0
+  },
+  {
+   "make": "Lincoln",
+   "complaints": 5560,
+   "cel": 272,
+   "pct": 4.9
+  },
+  {
+   "make": "Audi",
+   "complaints": 6936,
+   "cel": 317,
+   "pct": 4.6
+  },
+  {
+   "make": "Acura",
+   "complaints": 7093,
+   "cel": 315,
+   "pct": 4.4
+  },
+  {
+   "make": "Mazda",
+   "complaints": 9373,
+   "cel": 402,
+   "pct": 4.3
+  },
+  {
+   "make": "Honda",
+   "complaints": 50723,
+   "cel": 2001,
+   "pct": 3.9
+  },
+  {
+   "make": "Subaru",
+   "complaints": 18673,
+   "cel": 685,
+   "pct": 3.7
+  },
+  {
+   "make": "Toyota",
+   "complaints": 47386,
+   "cel": 1597,
+   "pct": 3.4
+  },
+  {
+   "make": "Pontiac",
+   "complaints": 5533,
+   "cel": 176,
+   "pct": 3.2
+  },
+  {
+   "make": "Mercury",
+   "complaints": 4009,
+   "cel": 123,
+   "pct": 3.1
+  },
+  {
+   "make": "Lexus",
+   "complaints": 6052,
+   "cel": 184,
+   "pct": 3.0
+  },
+  {
+   "make": "Tesla",
+   "complaints": 12151,
+   "cel": 5,
+   "pct": 0.0
+  }
+ ]
+}

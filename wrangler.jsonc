@@ -1,9 +1,13 @@
 // Cloudflare Workers static-assets deploy (used by "npx wrangler deploy" in the Workers build).
+// worker.js runs first to 301 www and http requests to https://dashboardsymbolmeanings.com.
 {
   "name": "dashboard-symbol-meanings",
   "compatibility_date": "2026-11-01",
+  "main": "./worker.js",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": true
   }
 }

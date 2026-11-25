@@ -1,7 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import Icon from '../../../components/Icon.astro';
-import { getMakes, yearSpan, type Model, type Make, type Light } from '../../../lib/data';
+import { getMakes, yearSpan, isThin, type Model, type Make, type Light } from '../../../lib/data';
 import { COLOURS, SEVERITY, type Colour } from '../../../lib/symbols';
 import { amazonUrl, SITE_URL, KEYFOB_URL } from '../../../lib/site';
 
@@ -21,7 +21,7 @@ const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', it
 ] };
 const total = m.gens[0].lights.length;
 ---
-<Base title={`${name} Dashboard Symbols & Warning Lights (${span})`} description={`What every ${name} dashboard light means: ${total} warning lights and indicators from the ${name} owner's manual, by generation, with what to do for each.`} jsonLd={crumbs}>
+<Base title={`${name} Dashboard Symbols & Warning Lights (${span})`} description={`What every ${name} dashboard light means: ${total} warning lights and indicators from the ${name} owner's manual, by generation, with what to do for each.`} jsonLd={crumbs} noindex={isThin(m)}>
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>›<a href={`/${mk.makeSlug}/`}>{mk.make}</a>›<span>{m.model}</span></nav>
   <section>
     <h1>{name} dashboard symbols and warning lights</h1>

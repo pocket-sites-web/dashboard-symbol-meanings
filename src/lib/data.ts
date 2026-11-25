@@ -90,3 +90,9 @@ export function makeLights(mk: Make) {
       }
   return [...out.values()];
 }
+
+// ---- Thin pages ----------------------------------------------------------------------------
+// Models with very few lights in their manual make thin pages. They stay on the site but are noindexed.
+export const THIN_LIGHTS = 12;
+const modelLights = (m: Model) => new Set(m.gens.flatMap((g) => g.lights.map((l) => l.sym?.id ?? l.name.toLowerCase())));
+export const isThin = (m: Model) => modelLights(m).size < THIN_LIGHTS;
